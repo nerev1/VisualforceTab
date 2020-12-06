@@ -1,61 +1,56 @@
 public class CustomAccountController {
     
-  public List<Account> accounts {get; private set;}
   public String selectedAccountId {get; set;}
-  public Account selectedAccount {get; set;}
-  public Account newAccount {get; set;}
-  public List<Contact> newAccountContacts {get; set;}
-  public Integer contactsCount {get; set;}
-  public Contact newContact {get; set;}
-  
-  public CustomAccountController() {
-      getAccounts();
-      selectedAccountId = accounts.get(0).Id;
-      updateSelectedAccount();
-      newAccount = new Account();
-      newAccountContacts = new List<Contact>();
-      contactsCount = newAccountContacts.size();
-      newContact = new Contact();
+  public Account selectedAccount {
+    get {
+      return [SELECT Name, Phone, Type, OwnerId, Site,
+      Industry, Rating, Fax, 
+      Website, AnnualRevenue,
+      (SELECT Name, Phone, Email
+        FROM Contacts)
+      FROM Account
+      WHERE Id = :selectedAccountId
+      LIMIT 1];
+    }
+    private set;
   }
   
-  public void getAccounts() {
-      accounts = [SELECT Name
-              FROM Account];
+  public Account newAccount {get; set;}
+  public List<Contact> newContacts {get; set;}
+  public Contact newContact {get; set;}
+
+  public CustomAccountController() {
+    getAccountOptions();
+    newAccount = new Account();
+    newContacts = new List<Contact>();
+    newContact = new Contact();
   }
   
   public List<SelectOption> getAccountOptions() {
-      List<SelectOption> options = new List<SelectOption>();
-      for (Account account : accounts) {
-          options.add(new SelectOption(account.Id, account.Name));
-      }
-      return options;
-  }
-  
-  public void updateSelectedAccount() {
-      selectedAccount = [SELECT Name, Phone, Type, OwnerId, Site,
-              Industry, Rating, Fax, 
-              Website, AnnualRevenue,
-              (SELECT Name, Phone, Email
-               FROM Contacts)
-             FROM Account
-             WHERE Id = :selectedAccountId
-             LIMIT 1];
+    List<Account> accounts = [SELECT Name FROM Account];
+    selectedAccountId = accounts[0].Id;
+    List<SelectOption> options = new List<SelectOption>();
+    for (Account account : accounts) {
+        options.add(new SelectOption(account.Id, account.Name));
+    }
+    return options;
   }
 
   public void saveAccount() {
     insert newAccount;
-    for (Contact contact : newAccountContacts) {
+    for (Contact contact : newContacts) {
       contact.AccountId = newAccount.Id;
     }
-    insert newAccountContacts;
+    insert newContacts;
     newAccount = new Account();
-    newAccountContacts = new List<Contact>();
-    getAccounts();
+    newContacts = new List<Contact>();
+    getAccountOptions();
   }
 
   public void addContactForNewAccount() {
-    newAccountContacts.add(newContact);
-    contactsCount = newAccountContacts.size();
+    newContacts.add(newContact);
     newContact = new Contact();
   }
+
+  
 }
