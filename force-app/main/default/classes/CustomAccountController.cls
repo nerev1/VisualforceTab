@@ -19,6 +19,16 @@ public class CustomAccountController {
   public List<Contact> newContacts {get; set;}
   public Contact newContact {get; set;}
 
+  public ApexPages.StandardSetController contactsController { get; set; }
+  public List<Contact> contacts {
+    get {
+      return (List<Contact>) contactsController.getRecords();
+    } 
+    set;
+  }
+  
+  private Integer PAGE_SIZE = 5;
+  
   public CustomAccountController() {
     getAccountOptions();
     newAccount = new Account();
@@ -29,11 +39,18 @@ public class CustomAccountController {
   public List<SelectOption> getAccountOptions() {
     List<Account> accounts = [SELECT Name FROM Account];
     selectedAccountId = accounts[0].Id;
+    updateContacts();
     List<SelectOption> options = new List<SelectOption>();
     for (Account account : accounts) {
         options.add(new SelectOption(account.Id, account.Name));
     }
     return options;
+  }
+
+  public void updateContacts() {
+    contactsController = new ApexPages.StandardSetController(selectedAccount.Contacts);
+    contactsController.setPageSize(PAGE_SIZE);
+    contacts = contactsController.getRecords();
   }
 
   public void saveAccount() {
@@ -51,6 +68,4 @@ public class CustomAccountController {
     newContacts.add(newContact);
     newContact = new Contact();
   }
-
-  
 }

@@ -9,6 +9,7 @@
         <apex:selectOptions value="{! accountOptions }"/>
         <apex:actionSupport
           event="onchange"
+          action="{! updateContacts }"
           reRender="account_detail,account_contacts"/>
       </apex:selectList>
     </apex:form>
@@ -32,21 +33,38 @@
     </apex:pageBlockSection>
   </apex:pageBlock>
 
-  <apex:form>
-    <apex:pageBlock title="Account Contacts" id="account_contacts">
+  <apex:form id="account_contacts">
+    <apex:pageBlock title="Account Contacts">
       <apex:pageBlockSection columns="1">
-        <apex:pageBlockTable value="{! selectedAccount.Contacts }" var="contact">
+        <apex:pageBlockTable value="{! contacts }" var="contact">
           <apex:column value="{! contact.Name }"/>
           <apex:column value="{! contact.Phone }"/>
           <apex:column value="{! contact.Email }"/>
         </apex:pageBlockTable>
       </apex:pageBlockSection>
-      <!--
       <apex:pageBlockButtons>
-        <apex:commandButton action="{! accountContactsController.next }" value="<<"/>
-        <apex:outputText value="{! currentPage }" />
-        <apex:commandButton action="{! accountContactsController.next }" value=">>"/>
-      </apex:pageBlockButtons>-->
+        <apex:commandButton 
+          action="{! contactsController.first }" 
+          reRender="account_contacts" 
+          value="<<" 
+          disabled="{! !contactsController.hasPrevious }"/>
+        <apex:commandButton 
+          action="{! contactsController.previous }" 
+          reRender="account_contacts" 
+          value="<"
+          disabled="{! !contactsController.hasPrevious }"/>
+        <apex:outputText value="{! contactsController.pageNumber }" />
+        <apex:commandButton 
+          action="{! contactsController.next }" 
+          reRender="account_contacts" 
+          value=">"
+          disabled="{! !contactsController.hasNext }"/>
+        <apex:commandButton 
+          action="{! contactsController.last }" 
+          reRender="account_contacts" 
+          value=">>"
+          disabled="{! !contactsController.hasNext }"/>
+      </apex:pageBlockButtons>
     </apex:pageBlock>
   </apex:form>
 
