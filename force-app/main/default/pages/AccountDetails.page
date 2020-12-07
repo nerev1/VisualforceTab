@@ -1,14 +1,12 @@
 <apex:page controller="CustomAccountController">
 
   <apex:pageBlock title="Select Account" id="account_list">
-    <apex:form>
-      <apex:selectList
-        value="{! selectedAccountId }"
+    <apex:form >
+      <apex:selectList value="{! selectedAccountId }"
         size="1"
         multiselect="false">
         <apex:selectOptions value="{! accountOptions }"/>
-        <apex:actionSupport
-          event="onchange"
+        <apex:actionSupport event="onchange"
           action="{! updateContacts }"
           reRender="account_detail,account_contacts"/>
       </apex:selectList>
@@ -28,7 +26,7 @@
       <apex:outputField value="{! selectedAccount.Type }"/>
       <apex:outputField value="{! selectedAccount.OwnerId }"/>
     </apex:pageBlockSection>
-    <apex:pageBlockSection>
+    <apex:pageBlockSection >
       
     </apex:pageBlockSection>
   </apex:pageBlock>
@@ -42,25 +40,21 @@
           <apex:column value="{! contact.Email }"/>
         </apex:pageBlockTable>
       </apex:pageBlockSection>
-      <apex:pageBlockButtons>
-        <apex:commandButton 
-          action="{! contactsController.first }" 
+      <apex:pageBlockButtons >
+        <apex:commandButton action="{! contactsController.first }" 
           reRender="account_contacts" 
           value="<<" 
           disabled="{! !contactsController.hasPrevious }"/>
-        <apex:commandButton 
-          action="{! contactsController.previous }" 
+        <apex:commandButton action="{! contactsController.previous }" 
           reRender="account_contacts" 
           value="<"
           disabled="{! !contactsController.hasPrevious }"/>
         <apex:outputText value="{! contactsController.pageNumber }" />
-        <apex:commandButton 
-          action="{! contactsController.next }" 
+        <apex:commandButton action="{! contactsController.next }" 
           reRender="account_contacts" 
           value=">"
           disabled="{! !contactsController.hasNext }"/>
-        <apex:commandButton 
-          action="{! contactsController.last }" 
+        <apex:commandButton action="{! contactsController.last }" 
           reRender="account_contacts" 
           value=">>"
           disabled="{! !contactsController.hasNext }"/>
@@ -68,7 +62,7 @@
     </apex:pageBlock>
   </apex:form>
 
-  <apex:form>
+  <apex:form >
     <apex:pageBlock title="Create Account">
       <apex:pageBlockSection columns="1">
         <apex:inputField value="{! newAccount.Name }"/>
@@ -82,13 +76,13 @@
         <apex:inputField value="{! newAccount.Type }"/>
         <apex:outputText label="Related Contact Count" value="{! newContacts.size }" />
       </apex:pageBlockSection>
-      <apex:pageBlockButtons>
+      <apex:pageBlockButtons >
         <apex:commandButton action="{! saveAccount }" value="Save" />
       </apex:pageBlockButtons>
     </apex:pageBlock>
   </apex:form>
 
-  <apex:form>
+  <apex:form >
     <apex:pageBlock title="Add Contact">
       <apex:pageBlockSection columns="1">
         <apex:inputField value="{! newContact.FirstName }"/>
@@ -97,7 +91,7 @@
         <apex:inputField value="{! newContact.Email }"/>
         <apex:inputField value="{! newContact.Title }"/>
       </apex:pageBlockSection>
-      <apex:pageBlockButtons>
+      <apex:pageBlockButtons >
         <apex:commandButton action="{! addContactForNewAccount }" value="Add Contact" />
       </apex:pageBlockButtons>
     </apex:pageBlock>
